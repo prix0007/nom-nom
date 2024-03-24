@@ -7,7 +7,7 @@ This is a simple feeder code binary written in rust to index starknet data to a 
 
 ### Requirements 
 - Rust v1.8+ [link](https://www.rust-lang.org/)
-- SurrealDB [link](https://www.rust-lang.org/)
+- SurrealDB [link](https://surrealdb.com/)
 - Starknet RPC Endpoint. You can get one from NM's RPC Service. [link](https://data.voyager.online/)
 
 
