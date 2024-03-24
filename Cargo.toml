@@ -1,0 +1,35 @@
+[package]
+name = "super-feeder"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+axum = "0.7.4"
+dotenv = "0.15.0"
+serde = { version = "1.0.196", features = ["derive", "alloc"] }
+starknet = "0.9.0"
+surrealdb = "1.2.0"
+tokio = { version = "1.36.0", features = ["fs", "rt-multi-thread", "full", "tracing", "macros"] }
+tracing-subscriber = { version = "0.3.18", features = ["json", "tracing"] }
+http-body-util = "0.1"
+serde_json = "1.0.114"
+reqwest = { version = "0.11.24", features = ["json", "serde_json"] }
+anyhow = { version = "1.0.80", features = ["backtrace"] }
+tower = "0.4.13"
+tower-http = { version = "0.5.2", features = ["trace"] }
+
+[lib]
+name="common"
+path="./lib/lib.rs"
+crate-type = ["lib"]
+
+
+[[bin]]
+name="feeder"
+path="./feeder/main.rs"
+
+[[bin]]
+name="api"
+path="./api/main.rs"
