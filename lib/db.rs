@@ -1,7 +1,8 @@
 use std::env;
 
 use serde_json::json;
-use starknet::core::types::BlockWithTxHashes;
+use starknet::core::types::requests::GetTransactionByHashRequest;
+use starknet::core::types::{BlockWithTxHashes, FieldElement, Transaction};
 use surrealdb::engine::remote::ws::Ws;
 use surrealdb::opt::auth::Root;
 use surrealdb::sql::Thing;
@@ -60,6 +61,33 @@ pub async fn write_block_with_txns(
     let record: Option<BlockWithTxHashes> = db
         .create(("blocks", data.block_hash.to_string()))
         .content::<BlockWithTxHashes>(data.into())
+        .await?;
+    // dbg!(&record);
+    Ok(record)
+}
+
+pub async fn read_transaction_from_transaction_hash(
+    db: SurrealDb,
+    transaction_hash: FieldElement,
+) -> Result<Option<Transaction>, surrealdb::Error> {
+    let mut response = db
+        .query("SELECT * from type::table($table) WHERE transaction_hash = $transaction_hash;")
+        .bind(json!({
+                "table": "transactions",
+                "transaction_hash": transaction_hash}
+        ))
+        .await?;
+    let value: Option<Transaction> = response.take(0)?;
+    Ok(value)
+}
+
+pub async fn write_txn_by_hash(
+    db: SurrealDb,
+    data: Transaction,
+) -> Result<Option<Transaction>, surrealdb::Error> {
+    let record: Option<Transaction> = db
+        .create(("transactions", data.transaction_hash().to_string()))
+        .content::<Transaction>(data.into())
         .await?;
     // dbg!(&record);
     Ok(record)
